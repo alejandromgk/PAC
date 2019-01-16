@@ -49,6 +49,9 @@
 #include <boost/math/distributions/poisson.hpp>
 #include <boost/thread.hpp>
 
+//PAC_MOD
+#include "zen/delay.h"
+
 using namespace std;
 
 #if defined(NDEBUG)
@@ -114,7 +117,11 @@ namespace {
     struct CBlockIndexWorkComparator
     {
         bool operator()(CBlockIndex *pa, CBlockIndex *pb) const {
-            // First sort by most total work, ...
+             // First sort by total delay in chain.
+            if (pa->nChainDelay < pb->nChainDelay) return false;
+            if (pa->nChainDelay > pb->nChainDelay) return true;
+
+            // ... then sort by most total work, ...
             if (pa->nChainWork > pb->nChainWork) return false;
             if (pa->nChainWork < pb->nChainWork) return true;
 
@@ -2971,8 +2978,16 @@ CBlockIndex* AddToBlockIndex(const CBlockHeader& block)
         pindexNew->BuildSkip();
     }
     pindexNew->nChainWork = (pindexNew->pprev ? pindexNew->pprev->nChainWork : 0) + GetBlockProof(*pindexNew);
+    if (pindexNew->pprev){
+        pindexNew->nChainDelay = pindexNew->pprev->nChainDelay + GetBlockDelay(*pindexNew,*(pindexNew->pprev), chainActive.Height(), IsInitialBlockDownload());
+    } else {
+        pindexNew->nChainDelay = 0 ;
+    }
+    if(pindexNew->nChainDelay != 0) {
+        LogPrintf("%s: Block belong to a chain under punishment Delay VAL: %i BLOCKHEIGHT: %d\n",__func__, pindexNew->nChainDelay,pindexNew->nHeight);
+    }
     pindexNew->RaiseValidity(BLOCK_VALID_TREE);
-    if (pindexBestHeader == NULL || pindexBestHeader->nChainWork < pindexNew->nChainWork)
+    if (pindexBestHeader == NULL || (pindexBestHeader->nChainWork < pindexNew->nChainWork && pindexNew->nChainDelay==0))
         pindexBestHeader = pindexNew;
 
     setDirtyBlockIndex.insert(pindexNew);
@@ -3740,6 +3755,12 @@ bool static LoadBlockIndexDB()
     {
         CBlockIndex* pindex = item.second;
         pindex->nChainWork = (pindex->pprev ? pindex->pprev->nChainWork : 0) + GetBlockProof(*pindex);
+        if (pindex->pprev){
+            pindex->nChainDelay = pindex->pprev->nChainDelay
+            + GetBlockDelay(*pindex,*(pindex->pprev), chainActive.Height(), IsInitialBlockDownload());
+        } else {
+            pindex->nChainDelay = 0 ;
+        }
         // We can link the chain of blocks for which we've received transactions at some point.
         // Pruned nodes may have deleted the block.
         if (pindex->nTx > 0) {
