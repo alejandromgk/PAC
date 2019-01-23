@@ -30,9 +30,9 @@
 #define TESTNET_GENESIS_NONCE 2279587UL
 #define TESTNET_GENESIS_TIMESTAMP 1517541975UL
 
-#define REGTEST_GENESIS_HASH "0x084c58211fe102add2fb5c3976f14f997e3c27a3a6fd5ab15a1929f7b5db9d95"
-#define REGTEST_GENESIS_NONCE 1UL
-#define REGTEST_GENESIS_TIMESTAMP 1517542062UL
+#define REGTEST_GENESIS_HASH "0x03ddaf131760ea9614a00fd504b035061b6ad367dc91be7a8821bd787484cba0"
+#define REGTEST_GENESIS_NONCE 2UL
+#define REGTEST_GENESIS_TIMESTAMP 1548210160UL
 
 static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesisOutputScript, uint32_t nTime, uint32_t nNonce, uint32_t nBits, int32_t nVersion, const CAmount& genesisReward, const Consensus::Params& consensus)
 {

@@ -94,12 +94,12 @@ class blockdelay(BitcoinTestFramework):
 
 
         print("\n\nGenerating initial blockchain 4 blocks")
-        blocks.extend(self.nodes[1].generate(1)) # block height 1
+        blocks.extend(self.nodes[0].generate(1)) # block height 1
         print(blocks)
         print("\n start sync_all #1")
         self.sync_all()
         print("\n end sync_all #1")
-        blocks.extend(self.nodes[0].generate(1)) # block height 2
+        blocks.extend(self.nodes[1].generate(1)) # block height 2
         self.sync_all()
         blocks.extend(self.nodes[2].generate(1)) # block height 3
         self.sync_all()
