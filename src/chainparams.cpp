@@ -402,10 +402,10 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].nTimeout = 999999999999ULL;
 
         // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000000000000000100010");
+        consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000000000000000000002");
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0x084c58211fe102add2fb5c3976f14f997e3c27a3a6fd5ab15a1929f7b5db9d95");
+        consensus.defaultAssumeValid = uint256S("0x03ddaf131760ea9614a00fd504b035061b6ad367dc91be7a8821bd787484cba0");
 
         pchMessageStart[0] = 0x96;
         pchMessageStart[1] = 0xa6;
@@ -434,7 +434,7 @@ public:
 
         checkpointData = (CCheckpointData){
             boost::assign::map_list_of
-            ( 0, uint256S("0x084c58211fe102add2fb5c3976f14f997e3c27a3a6fd5ab15a1929f7b5db9d95")),
+            ( 0, uint256S("0x03ddaf131760ea9614a00fd504b035061b6ad367dc91be7a8821bd787484cba0")),
             0,
             0,
             0

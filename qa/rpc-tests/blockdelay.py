@@ -29,22 +29,7 @@ class blockdelay(BitcoinTestFramework):
 
     def setup_network(self, split=False):
         self.nodes = []
-
-        # -exportdir option means we must provide a valid path to the destination folder for wallet backups
-        ed0 = "-exportdir=" + self.options.tmpdir + "/node0"
-        ed1 = "-exportdir=" + self.options.tmpdir + "/node1"
-        ed2 = "-exportdir=" + self.options.tmpdir + "/node2"
-        ed3 = "-exportdir=" + self.options.tmpdir + "/node3"
-        '''
-        extra_args = [["-debug","-keypool=100", "-alertnotify=echo %s >> \"" + self.alert_filename + "\"", ed0],
-            ["-debug", "-keypool=100", "-alertnotify=echo %s >> \"" + self.alert_filename + "\"", ed1],
-            ["-debug", "-keypool=100", "-alertnotify=echo %s >> \"" + self.alert_filename + "\"", ed2],
-            ["-debug", "-keypool=100", "-alertnotify=echo %s >> \"" + self.alert_filename + "\"", ed3]]
-        '''
-
-        #self.nodes = start_nodes(4, self.options.tmpdir, extra_args)
         self.nodes = start_nodes(4, self.options.tmpdir)
-
 
         if not split:
             connect_nodes_bi(self.nodes, 1, 2)
@@ -91,21 +76,18 @@ class blockdelay(BitcoinTestFramework):
         blocks.append(self.nodes[0].getblockhash(0))
         print("\n\nGenesis block is: " + blocks[0])
         # raw_input("press enter to start..")
-
-
-        print("\n\nGenerating initial blockchain 4 blocks")
+        
+        print("\n\nGenerating initial blockchain of 4 blocks")
         blocks.extend(self.nodes[0].generate(1)) # block height 1
-        print(blocks)
-        print("\n start sync_all #1")
         self.sync_all()
-        print("\n end sync_all #1")
         blocks.extend(self.nodes[1].generate(1)) # block height 2
         self.sync_all()
         blocks.extend(self.nodes[2].generate(1)) # block height 3
         self.sync_all()
         blocks.extend(self.nodes[3].generate(1)) # block height 4
         self.sync_all()
-        print("Blocks generated")
+        print("Four blocks generated.")
+
 
         print("\n\nSplit network")
         self.split_network()
@@ -115,25 +97,23 @@ class blockdelay(BitcoinTestFramework):
         # Main chain
         print("\n\nGenerating 2 parallel chains with different length")
 
-        print("\nGenerating 12 honest blocks")
+        print("\nGenerating 12 honest blocks (blocks 5-16)")
         blocks.extend(self.nodes[0].generate(6)) # block height 5 -6 -7 -8 - 9 - 10
-        print("\n start sync_all #1")
         self.sync_all()
-        print("\n end sync_all #1")
         blocks.extend(self.nodes[1].generate(6)) # block height 11-12-13-14-15-16
         last_main_blockhash=blocks[len(blocks)-1]
         self.sync_all()
-        print("Honest block generated")
+        print("Honest blocks generated.")
 
         assert self.nodes[0].getbestblockhash() == last_main_blockhash
 
         # Malicious nodes mining privately faster
-        print("\nGenerating 13 malicious blocks")
+        print("\nGenerating 13 malicious blocks (blocks 5-17)")
         self.nodes[2].generate(10) # block height 5 - 6 -7 -8 -9-10 -11 12 13 14
         self.sync_all()
         self.nodes[3].generate(3) # block height 15 - 16 - 17
         self.sync_all()
-        print("Malicious block generated")
+        print("Malicious blocks generated.")
 
 
         print("\n\nJoin network")
@@ -146,10 +126,14 @@ class blockdelay(BitcoinTestFramework):
         assert self.nodes[0].getbestblockhash() == last_main_blockhash
         print("Confirmed: malicious chain is under penalty")
 
+        print("\nTesting chaintips")
+        current_chain_tips = self.nodes[0].getchaintips()
+        assert (current_chain_tips[0]['penalization'] == 65)
+        print("Malicious chain is correctly penalized with 65 blocks after generating 12 old blocks + 1 new block.")
 
-        print("\nGenerating 64 malicious blocks")       
+        print("\nGenerating 64 malicious blocks (New height = 81)")       
         self.nodes[3].generate(64)
-        print("Malicious block generated")
+        print("Malicious blocks generated")
 
         time.sleep(10)
 
@@ -157,13 +141,13 @@ class blockdelay(BitcoinTestFramework):
         assert self.nodes[0].getbestblockhash() == last_main_blockhash
         print("Confirmed: malicious chain is under penalty")
 
-        print("\nGenerating 65 more honest blocks")
+        print("\nGenerating 65 more honest blocks (New height = 81)")
         self.nodes[0].generate(65)
-        print("Honest block generated")
+        print("Honest blocks generated")
 
-        print("\nGenerating 1 more malicious block")
+        print("\nGenerating 1 more malicious block (New height = 82)")
         last_malicious_blockhash=self.nodes[3].generate(1)[0]
-        print("Malicious block generated")
+        print("Malicious blocks generated")
 
         print("\nWaiting that all network nodes are synced with same chain length")
         sync_blocks(self.nodes, 1, True)
