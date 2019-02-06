@@ -2984,7 +2984,7 @@ CBlockIndex* AddToBlockIndex(const CBlockHeader& block)
         pindexNew->nChainDelay = 0 ;
     }
     if(pindexNew->nChainDelay != 0) {
-        LogPrintf("%s: Block belong to a chain under punishment Delay VAL: %i BLOCKHEIGHT: %d\n",__func__, pindexNew->nChainDelay,pindexNew->nHeight);
+        LogPrintf("%s: Block belong to a chain under punishment - Delay value: %i, BlockHeight: %d\n",__func__, pindexNew->nChainDelay,pindexNew->nHeight);
     }
     pindexNew->RaiseValidity(BLOCK_VALID_TREE);
     if (pindexBestHeader == NULL || (pindexBestHeader->nChainWork < pindexNew->nChainWork && pindexNew->nChainDelay==0))
