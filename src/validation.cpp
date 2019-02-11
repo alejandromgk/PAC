@@ -1268,9 +1268,9 @@ CAmount GetMasternodePayment(int nHeight, CAmount blockValue, const Consensus::P
     double dMasternodePart;
 
     if(nHeight < consensusParams.nMasternodePaymentsIncreaseBlock){
-        dMasternodePart = 9.0/16.0; // 56.25% of the block reward.
-    } else {
         dMasternodePart = 15.0/16.0; // 93.75% of the block reward.
+    } else {
+        dMasternodePart = 13.0/16.0; // 81.25% of the corresponding reward for miners/masternodes, or 65% of the total block reward.
     }
 
     return (blockValue * dMasternodePart);
