@@ -121,7 +121,7 @@ public:
         strNetworkID = "main";
         consensus.nSubsidyHalvingInterval = 210240; // Note: actual number of blocks per calendar year with DGW v3 is ~200700 (for example 449750 - 249050)
         consensus.nMasternodePaymentsStartBlock = 200; // not true, but it's ok as long as it's less then nMasternodePaymentsIncreaseBlock
-        consensus.nMasternodePaymentsIncreaseBlock = 50000; // 50000 height aproximately April 20th
+        consensus.nMasternodePaymentsIncreaseBlock = 217160; // 217160 height aproximately February 20th
         consensus.nMasternodePaymentsIncreasePeriod = 576*30; // Not used
         consensus.nFeeChangeBlock = 155000; // Aproximately October 29th 2018
         consensus.nInstantSendKeepLock = 24;
