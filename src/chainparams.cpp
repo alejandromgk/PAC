@@ -121,7 +121,7 @@ public:
         strNetworkID = "main";
         consensus.nSubsidyHalvingInterval = 210240; // Note: actual number of blocks per calendar year with DGW v3 is ~200700 (for example 449750 - 249050)
         consensus.nMasternodePaymentsStartBlock = 200; // not true, but it's ok as long as it's less then nMasternodePaymentsIncreaseBlock
-        consensus.nMasternodePaymentsIncreaseBlock = 217160; // 217160 height aproximately February 20th
+        consensus.nMasternodePaymentsIncreaseBlock = 217736; // 217736 height aproximately February 21th
         consensus.nMasternodePaymentsIncreasePeriod = 576*30; // Not used
         consensus.nFeeChangeBlock = 155000; // Aproximately October 29th 2018
         consensus.nInstantSendKeepLock = 24;
@@ -249,7 +249,7 @@ public:
         strNetworkID = "test";
         consensus.nSubsidyHalvingInterval = 210240;
         consensus.nMasternodePaymentsStartBlock = 2; // not true, but it's ok as long as it's less then nMasternodePaymentsIncreaseBlock
-        consensus.nMasternodePaymentsIncreaseBlock = 6200;
+        consensus.nMasternodePaymentsIncreaseBlock = 126250;
         consensus.nMasternodePaymentsIncreasePeriod = 10;
         consensus.nFeeChangeBlock = 99500;
         consensus.nInstantSendKeepLock = 6;
