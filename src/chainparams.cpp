@@ -263,7 +263,7 @@ public:
         consensus.nSuperblockCycle = 24; // Superblocks can be issued hourly on testnet
         consensus.nGovernanceMinQuorum = 1;
         consensus.nGovernanceFilterElements = 500;
-        consensus.nGovernanceFeeChangeTime = 1553140800; // 20 March 2019 22:00:00
+        consensus.nGovernanceFeeChangeTime = 1553198400; // 21 March 2019 14:00:00
         consensus.nMasternodeMinimumConfirmations = 1;
         consensus.nMajorityEnforceBlockUpgrade = 51;
         consensus.nMajorityRejectBlockOutdated = 75;
