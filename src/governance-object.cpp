@@ -491,9 +491,11 @@ bool CGovernanceObject::IsValidLocally(std::string& strError, bool& fMissingMast
 
 CAmount CGovernanceObject::GetMinCollateralFee()
 {
+    CAmount nProposalFee = Params().GetConsensus().nGovernanceFeeChangeTime < nTime ? OLD_GOVERNANCE_PROPOSAL_FEE_TX : GOVERNANCE_PROPOSAL_FEE_TX;
+
     // Only 1 type has a fee for the moment but switch statement allows for future object types
     switch(nObjectType) {
-        case GOVERNANCE_OBJECT_PROPOSAL:    return GOVERNANCE_PROPOSAL_FEE_TX;
+        case GOVERNANCE_OBJECT_PROPOSAL:    return nProposalFee;
         case GOVERNANCE_OBJECT_TRIGGER:     return 0;
         case GOVERNANCE_OBJECT_WATCHDOG:    return 0;
         default:                            return MAX_MONEY;
