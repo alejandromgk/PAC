@@ -491,9 +491,9 @@ bool CGovernanceObject::IsValidLocally(std::string& strError, bool& fMissingMast
 
 CAmount CGovernanceObject::GetMinCollateralFee()
 {
-    LogPrintf ("CGovernanceObject::GetMinCollateralFee::nGovernanceFeeChangeTime -- %d\n", Params().GetConsensus().nGovernanceFeeChangeTime);
-    LogPrintf ("CGovernanceObject::GetMinCollateralFee::nTime -- %d\n", nTime);
-    CAmount nProposalFee = nTime < Params().GetConsensus().nGovernanceFeeChangeTime ? OLD_GOVERNANCE_PROPOSAL_FEE_TX : GOVERNANCE_PROPOSAL_FEE_TX;
+    LogPrintf ("CGovernanceObject::GetMinCollateralFee::nGovernanceFeeChangeBlock -- %d\n", Params().GetConsensus().nGovernanceFeeChangeBlock);
+    LogPrintf ("CGovernanceObject::GetMinCollateralFee::chainActive.Height() -- %d\n", chainActive.Height());
+    CAmount nProposalFee = chainActive.Height() < Params().GetConsensus().nGovernanceFeeChangeBlock ? OLD_GOVERNANCE_PROPOSAL_FEE_TX : GOVERNANCE_PROPOSAL_FEE_TX;
 
     // Only 1 type has a fee for the moment but switch statement allows for future object types
     switch(nObjectType) {
