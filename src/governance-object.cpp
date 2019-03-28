@@ -12,6 +12,7 @@
 #include "masternodeman.h"
 #include "messagesigner.h"
 #include "util.h"
+#include "utilmoneystr.h"
 
 #include <univalue.h>
 
@@ -504,6 +505,21 @@ CAmount CGovernanceObject::GetMinCollateralFee()
     }
 }
 
+CAmount CGovernanceObject::GetMinCollateralFee(int nBlockHeight)
+{
+    LogPrintf ("CGovernanceObject::GetMinCollateralFee::nGovernanceFeeChangeBlock -- %d\n", Params().GetConsensus().nGovernanceFeeChangeBlock);
+    LogPrintf ("CGovernanceObject::GetMinCollateralFee::nBlockHeight -- %d\n", nBlockHeight);
+    CAmount nProposalFee = nBlockHeight < Params().GetConsensus().nGovernanceFeeChangeBlock ? OLD_GOVERNANCE_PROPOSAL_FEE_TX : GOVERNANCE_PROPOSAL_FEE_TX;
+
+    // Only 1 type has a fee for the moment but switch statement allows for future object types
+    switch(nObjectType) {
+        case GOVERNANCE_OBJECT_PROPOSAL:    return nProposalFee;
+        case GOVERNANCE_OBJECT_TRIGGER:     return 0;
+        case GOVERNANCE_OBJECT_WATCHDOG:    return 0;
+        default:                            return MAX_MONEY;
+    }
+}
+
 bool CGovernanceObject::IsCollateralValid(std::string& strError, bool& fMissingConfirmations)
 {
     strError = "";
@@ -513,6 +529,7 @@ bool CGovernanceObject::IsCollateralValid(std::string& strError, bool& fMissingC
 
     CTransaction txCollateral;
     uint256 nBlockHash;
+    CAmount nCollateralAmount;
 
     // RETRIEVE TRANSACTION IN QUESTION
 
@@ -551,8 +568,9 @@ bool CGovernanceObject::IsCollateralValid(std::string& strError, bool& fMissingC
             LogPrintf ("CGovernanceObject::IsCollateralValid -- %s\n", strError);
             return false;
         }
-        if(o.scriptPubKey == findScript && o.nValue >= nMinFee) {
+        if(o.scriptPubKey == findScript) {
             DBG( cout << "IsCollateralValid foundOpReturn = true" << endl; );
+            nCollateralAmount = o.nValue;
             foundOpReturn = true;
         }
         else  {
@@ -576,9 +594,16 @@ bool CGovernanceObject::IsCollateralValid(std::string& strError, bool& fMissingC
         if (mi != mapBlockIndex.end() && (*mi).second) {
             CBlockIndex* pindex = (*mi).second;
             if (chainActive.Contains(pindex)) {
+                nMinFee = GetMinCollateralFee(pindex->nHeight);
                 nConfirmationsIn += chainActive.Height() - pindex->nHeight + 1;
             }
         }
+    }
+
+    if (nMinFee != nCollateralAmount) {
+        strError = strprintf("Collateral fee (%s) is not the expected (%s) for gobject: %s", FormatMoney(nCollateralAmount), FormatMoney(nMinFee), nExpectedHash.ToString());
+        LogPrintf ("CGovernanceObject::IsCollateralValid -- %s\n", strError);
+        return false;
     }
 
     if(nConfirmationsIn < GOVERNANCE_FEE_CONFIRMATIONS) {

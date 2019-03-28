@@ -278,6 +278,8 @@ public:
 
     CAmount GetMinCollateralFee();
 
+    CAmount GetMinCollateralFee(int nBlockHeight);
+
     UniValue GetJSONObject();
 
     void Relay(CConnman& connman);
