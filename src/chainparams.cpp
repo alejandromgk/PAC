@@ -349,7 +349,7 @@ public:
         nPoolMaxParticipants = 5;
         nFulfilledRequestExpireTime = 60*60; // fulfilled requests expire in 1 hour
 
-        vSporkAddresses = {"PJZ3SkvPtcEX4HUt6R2UqiP2QJRngV9EFU"};
+        vSporkAddresses = {"PMzZr2T3rxV7jRPSpwv6x81j7ihbVDc3Tj"};
         nMinSporkKeys = 1;
         fBIP9CheckMasternodesUpgraded = true;
 
@@ -511,7 +511,7 @@ public:
         nPoolMaxParticipants = 5;
         nFulfilledRequestExpireTime = 5*60; // fulfilled requests expire in 5 minutes
 
-        vSporkAddresses = {"qWDfemL38E2D66WLrHYjxg7oTzuVZ5UAaR"};
+        vSporkAddresses = {"qRbtaPC4NyGn6v1jFVS4wPpgFjeetkeCmP"};
         nMinSporkKeys = 1;
         fBIP9CheckMasternodesUpgraded = true;
 
@@ -667,7 +667,7 @@ public:
         nPoolMaxParticipants = 5;
         nFulfilledRequestExpireTime = 5*60; // fulfilled requests expire in 5 minutes
 
-        vSporkAddresses = {"qWDfemL38E2D66WLrHYjxg7oTzuVZ5UAaR"};
+        vSporkAddresses = {"qRbtaPC4NyGn6v1jFVS4wPpgFjeetkeCmP"};
         nMinSporkKeys = 1;
         // devnets are started with no blocks and no MN, so we can't check for upgraded MN (as there are none)
         fBIP9CheckMasternodesUpgraded = false;
